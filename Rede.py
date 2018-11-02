@@ -9,7 +9,7 @@ class PacoteIP:
 
 class CamadaRede:
     def __init__(self, address='0.0', mask='255.0'):
-        self.enlace = enl.CamadaEnlace() # Camada física
+        self.enlace = enl.CamadaEnlace() # Camada Enlace
         self.address = address # endereço a ser atribuido como próprio
         self.mask = mask
 

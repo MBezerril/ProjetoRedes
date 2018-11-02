@@ -22,7 +22,7 @@ class CamadaEnlace:
         # Se houver retorna pra DETECCAO
 
         for t in range(self.tries): # Verifica a disponibilidade da rede uma certa quantidade de vezes antes de expirar
-            array = self.camadaFisica.read(self.bits)
+            lido = self.camadaFisica.read(self.bits)
             if 1 not in array:
                 self.transmiting = True
                 break
