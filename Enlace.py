@@ -45,21 +45,28 @@ class CamadaEnlace:
         bytes.append('borda')
         bytes.insert(0, 'borda')
 
-        for t in range(self.tries): # Verifica a disponibilidade da rede uma certa quantidade de vezes antes de expirar
+        t = 0
+        while t < self.tries: # Verifica a disponibilidade da rede uma certa quantidade de vezes antes de expirar
             lido = self.camadaFisica.read()
             if lido is None:
+                self.transmiting = True
                 for bit in bytes:
                     self.camadaFisica.write(bit)
                     if self.camadaFisica.read() != bit:  # Se foi lido algo diferente do que foi escrito, então houve colisão
-                        print("COLISÃO")
+                        print("COLISÃO! EMITINDO JAM")
+                        self.camadaFisica.write('borda')
+                        self.camadaFisica.write('borda')
+                        self.transmiting = False
+                        t = 0
+                        sleep(random.randint(1, 5))
                     break
             else:
-                sleep(random.randint(10, 20)) #Espera aleatória para verificar novamente se o meio está livre
-        # Se foi dado o sinal de que pode ser transmitido, ele escreve e le para verificar colisao
-        if self.transmiting:
+                t += 1
+                sleep(random.randint(10, 25)) #Espera aleatória para verificar novamente se o meio está livre
 
+        if self.transmiting:
+            self.transmiting = False
             return True
-            # self.camadaFisica.write(data)
         else:
             print("EXCEDEU AS TENTATIVAS - CAMADA DE ENLACE")
             return False
@@ -88,16 +95,30 @@ class CamadaEnlace:
                     else:
                         self.receiving = False
 
-        quadro = hamm.hammingCorrection(quadro)
+        partes = [quadro[x:x + 8] for x in range(0, len(quadro), 8)]
+        pacoteRetorno = pacote()
+        pacoteRetorno.destino = self.decodeInt(hamm.hammingCodes(partes[0]))
+        pacoteRetorno.origem = self.decodeInt(hamm.hammingCodes(partes[1]))
+        pacoteRetorno.tamanhoDados = self.decodeInt(hamm.hammingCodes(partes[2]))
+        final = []
+        for a in partes[3:]:
+            final += self.decodeChar(hamm.hammingCodes(a))
+
         # Processar o quadro para retornar o pacote
         return quadro
 
     def encode(self, ascii):
-        bytes = ' '.join('{0:08b}'.format(ord(x), 'b') for x in ascii)
-        return bytes.replace(' ', '')
+        if type(ascii) is int:
+            return "{0:08b}".format(ascii)
+        else:
+            bytes = ' '.join('{0:08b}'.format(ord(x), 'b') for x in ascii)
+            return bytes.replace(' ', '')
 
-    def decode(self, bytes):
+    def decodeChar(self, bytes):
         return ''.join(chr(int(bytes[i*8:i*8+8], 2)) for i in range(len(bytes)//8))
+
+    def decodeInt(self, bytes):
+        return int(bytes, 2)
 
     def hammingDados(self, dados):
         partes = [dados[x:x+8] for x in range(0, len(dados), 8)]
