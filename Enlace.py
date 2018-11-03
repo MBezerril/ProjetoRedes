@@ -3,6 +3,14 @@ import threading as thrd
 from time import sleep
 import Hamming as hamm
 import random
+
+class pacote:
+    def __init__(self):
+        self.origem = ''
+        self.destino = ''
+        self.tamanhoDados = ''
+        self.dados = ''
+
 class CamadaEnlace:
     def __init__(self):
         self.camadaFisica = fis.CamadaFisica() # Camada física
@@ -57,3 +65,9 @@ class CamadaEnlace:
         quadro = hamm.hammingCorrection(quadro)
         #Processar o quadro para retornar o pacote
         return quadro
+
+    def encode(self, ascii):
+        bytes = ' '.join('{0:08b}'.format(ord(x), 'b') for x in ascii)
+        return bytes.replace(' ', '')
+    def decode(self, bytes):
+        return ''.join(chr(int(bytes[i*8:i*8+8], 2)) for i in range(len(bytes)//8))
