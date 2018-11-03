@@ -17,8 +17,8 @@
       <file leaf-file-name="Fisica.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Fisica.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="73" column="33" lean-forward="false" selection-start-line="73" selection-start-column="33" selection-end-line="73" selection-end-column="33" />
+            <state relative-caret-position="632">
+              <caret line="73" column="30" lean-forward="false" selection-start-line="73" selection-start-column="30" selection-end-line="73" selection-end-column="30" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -29,8 +29,8 @@
       <file leaf-file-name="Enlace.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Enlace.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="22" lean-forward="false" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
+            <state relative-caret-position="445">
+              <caret line="27" column="21" lean-forward="true" selection-start-line="27" selection-start-column="21" selection-end-line="27" selection-end-column="21" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -41,8 +41,8 @@
       <file leaf-file-name="Hamming.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Hamming.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1527">
-              <caret line="11" column="9" lean-forward="true" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
+            <state relative-caret-position="34">
+              <caret line="2" column="29" lean-forward="true" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -90,8 +90,8 @@
       <list>
         <option value="$PROJECT_DIR$/Transporte.py" />
         <option value="$PROJECT_DIR$/Rede.py" />
-        <option value="$PROJECT_DIR$/Fisica.py" />
         <option value="$PROJECT_DIR$/Ramming.py" />
+        <option value="$PROJECT_DIR$/Fisica.py" />
         <option value="$PROJECT_DIR$/Enlace.py" />
       </list>
     </option>
@@ -600,24 +600,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Rede.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="56" lean-forward="false" selection-start-line="11" selection-start-column="56" selection-end-line="11" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fisica.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="73" column="33" lean-forward="false" selection-start-line="73" selection-start-column="33" selection-end-line="73" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Ramming.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="649">
@@ -626,18 +608,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Fisica.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="632">
+          <caret line="73" column="30" lean-forward="false" selection-start-line="73" selection-start-column="30" selection-end-line="73" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Hamming.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1527">
-          <caret line="11" column="9" lean-forward="true" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
+        <state relative-caret-position="34">
+          <caret line="2" column="29" lean-forward="true" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Rede.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="56" lean-forward="false" selection-start-line="11" selection-start-column="56" selection-end-line="11" selection-end-column="56" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Enlace.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="22" lean-forward="false" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
+        <state relative-caret-position="445">
+          <caret line="27" column="21" lean-forward="true" selection-start-line="27" selection-start-column="21" selection-end-line="27" selection-end-column="21" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
