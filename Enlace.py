@@ -1,6 +1,7 @@
 import Fisica as fis
 import threading as thrd
 from time import sleep
+import Ramming as hamm
 class CamadaEnlace:
     def __init__(self):
         self.camadaFisica = fis.CamadaFisica() # Camada física
@@ -16,10 +17,8 @@ class CamadaEnlace:
         :param data:
         :return:
         """
-        # Deteccao de uso da rede
-        # Tenta tramitir
-        # Verifica colisão
-        # Se houver retorna pra DETECCAO
+
+
 
         for t in range(self.tries): # Verifica a disponibilidade da rede uma certa quantidade de vezes antes de expirar
             lido = self.camadaFisica.read(self.bits)
