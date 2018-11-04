@@ -17,7 +17,7 @@ class pacote:
     def setDestino(self, num1, num2):
         self.destino = str(num1) + '.' + str(num2)
 
-class camadaenlace:
+class CamadaEnlace:
     def __init__(self):
         self.camadafisica = fis.CamadaFisica() # camada física
         self.colision = False # variavel pra detectar colisão
@@ -25,7 +25,7 @@ class camadaenlace:
         self.transmiting = False # caso a camada de enlace esteja fazendo tranmissão
         self.receiving = False #caso esteja recebendo dados
 
-    def trasnmition(self, pacote):
+    def send(self, pacote):
         """
         quando receber um dado tenta transmistir os dados pela camada física
         quando consegiur, retorna verdadeiro, caso não consiga, retorna falso
@@ -91,6 +91,8 @@ class camadaenlace:
                 if recebido == 'borda':
                     self.receiving = True
                     break
+            if self.transmiting:
+                return None
             while not self.transmiting and self.receiving:
                 recebido = self.camadafisica.read()
                 if recebido != 'borda':

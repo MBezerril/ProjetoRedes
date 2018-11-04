@@ -8,7 +8,6 @@ from time import sleep
 
 class CamadaFisica:
     def __init__(self):
-        self.canPlay = False
         self.executor = None
         self.chunkSize = 1024
         self.limite = 500
@@ -17,7 +16,6 @@ class CamadaFisica:
 
 
     def write(self, data):
-        self.canPlay = True
         self.executor = thrd.Thread(target=self._writing, args=[data])
         self.executor.start()
 
