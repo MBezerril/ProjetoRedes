@@ -10,9 +10,9 @@ class CamadaFisica:
     def __init__(self):
         self.executor = None
         self.chunkSize = 1024
-        self.limite = 500
+        self.limite = 450
         self.rateValue = 48000
-        self.intervalo = 1 #<<<<<<<<<<<<
+        self.intervalo = 0.5 #<<<<<<<<<<<<
 
 
     def write(self, data):
@@ -22,20 +22,22 @@ class CamadaFisica:
     def _writing(self, data):
         signal = []
         wave_obj = sa.WaveObject.from_wave_file("beep-04.wav")
-        play_obj = wave_obj.play()
         if data == 1:
-            signal = [0,1]
+            sleep(self.intervalo * 0.5)
+            play_obj = wave_obj.play()
+            sleep(self.intervalo * 0.5)
+            play_obj.stop()
+
         elif data == 0:
-            signal = [1, 0]
+            play_obj = wave_obj.play()
+            sleep(self.intervalo * 0.5)
+            play_obj.stop()
+            sleep(self.intervalo * 0.5)
         elif data == 'borda':
-            signal = [1, 1]
-        for i in signal:
-            if i == 1:
-                play_obj = wave_obj.play()
-                sleep(self.intervalo/2)
-                play_obj.stop()
-            else:
-                sleep(self.intervalo/2)
+            play_obj = wave_obj.play()
+            # sleep(self.intervalo * 0.4)
+            # play_obj.stop()
+            # 10 01
 
 
     def read(self):
@@ -52,16 +54,20 @@ class CamadaFisica:
         audioDrive = pyaudio.PyAudio()
         gravador = audioDrive.open(input=True, channels=1, rate=self.rateValue, format=pyaudio.paInt16, input_device_index=0)
 
-        for i in range(quantLeitura/2): #controla o tempo de coleta de gravação pra equivaler a duração do invtervalo
+        for i in range(int(quantLeitura/2)): #controla o tempo de coleta de gravação pra equivaler a duração do invtervalo
             resultado = gravador.read(self.chunkSize)
-            valor = audioop.rms(resultado, 2)
-            if valor > self.limite:
-                inicio = 1
-        for i in range(quantLeitura/2): #controla o tempo de coleta de gravação pra equivaler a duração do invtervalo
+            valor += audioop.rms(resultado, 2)
+        valor /= int(quantLeitura/2)
+        print(valor)
+        if valor > self.limite:
+            inicio = 1
+        for i in range(int(quantLeitura/2)): #controla o tempo de coleta de gravação pra equivaler a duração do invtervalo
             resultado = gravador.read(self.chunkSize)
-            valor = audioop.rms(resultado, 2)
-            if valor > self.limite:
-                final = 1
+            valor += audioop.rms(resultado, 2)
+        valor /= int(quantLeitura/2)
+        print(valor)
+        if valor > self.limite:
+            final = 1
 
         if(inicio!=final):
             return final

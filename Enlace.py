@@ -8,7 +8,7 @@ class pacote:
     def __init__(self):
         self.origem = ''
         self.destino = ''
-        self.tamanhoDados = 0
+        self.tamanhodados = 0
         self.dados = ''
 
     def setOrigem(self, num1, num2):
@@ -51,25 +51,31 @@ class CamadaEnlace:
         bytes += self.hammingDados(dadospacote)
         bytes.append('borda')
         bytes.insert(0, 'borda')
-
+        print("A ser impresso: {}".format(bytes))
         t = 0
         while t < self.tries: # verifica a disponibilidade da rede uma certa quantidade de vezes antes de expirar
             lido = self.camadafisica.read()
+            print("{} encontrado".format(lido))
             if lido is None:
                 self.transmiting = True
                 for bit in bytes:
                     self.camadafisica.write(bit)
-                    if self.camadafisica.read() != bit:  # se foi lido algo diferente do que foi escrito, então houve colisão
+                    b = self.camadafisica.read()
+                    print("{} = {}".format(b, bit))
+                    if b != bit:  # se foi lido algo diferente do que foi escrito, então houve colisão
                         print("colisão! emitindo jam")
                         self.camadafisica.write('borda')
                         self.camadafisica.write('borda')
                         self.transmiting = False
                         t = 0
                         sleep(random.randint(1, 5))
+                        break
+                if self.transmiting:
                     break
             else:
+                print("Meio em uso! espera aleatória")
                 t += 1
-                sleep(random.randint(10, 25)) #espera aleatória para verificar novamente se o meio está livre
+                sleep(random.randint(1, 5)) #espera aleatória para verificar novamente se o meio está livre
 
         if self.transmiting:
             self.transmiting = False

@@ -12,6 +12,7 @@ class CamadaRede:
 
     def start(self):
         escritor = thr.Thread(target=self.getAndSend())
+        escritor.start()
         self.startListen()
 
     def receiveAndPrint(self):
@@ -26,6 +27,7 @@ class CamadaRede:
 
     def startListen(self):
         leitor = thr.Thread(target=self.receiveAndPrint())
+        leitor.start()
 
     def getAndSend(self):
         while 1:
@@ -39,4 +41,7 @@ class CamadaRede:
                 self.startListen()
 
 
+endereco = input("Endereço: ")
+rede = CamadaRede(address=endereco)
+rede.start()
 
