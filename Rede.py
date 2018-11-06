@@ -11,11 +11,12 @@ class CamadaRede:
         self.listening = False
 
     def start(self):
-        escritor = thr.Thread(target=self.getAndSend())
+        escritor = thr.Thread(target=self.getAndSend)
         escritor.start()
         self.startListen()
 
     def receiveAndPrint(self):
+        print("Começando a escutar...")
         self.listening = True
         while 1:
             pacoteRecebido = self.enlace.listenpackage()
@@ -26,7 +27,7 @@ class CamadaRede:
                 print(pacoteRecebido.dados)
 
     def startListen(self):
-        leitor = thr.Thread(target=self.receiveAndPrint())
+        leitor = thr.Thread(target=self.receiveAndPrint)
         leitor.start()
 
     def getAndSend(self):
@@ -36,6 +37,7 @@ class CamadaRede:
             pacote.dados = input("Digite a mensagem: ")
             pacote.tamanhoDados = len(pacote.dados)
             pacote.origem = self.address
+            self.enlace.camadafisica.debug = True
             self.enlace.send(pacote)
             if not self.listening:
                 self.startListen()

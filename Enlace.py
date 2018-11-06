@@ -24,6 +24,7 @@ class CamadaEnlace:
         self.tries = 10 # quantidade de tentativas
         self.transmiting = False # caso a camada de enlace esteja fazendo tranmissão
         self.receiving = False #caso esteja recebendo dados
+        self.debug = False
 
     def send(self, pacote):
         """
@@ -58,10 +59,11 @@ class CamadaEnlace:
             print("{} encontrado".format(lido))
             if lido is None:
                 self.transmiting = True
+                self.camadafisica.debug = True
                 for bit in bytes:
                     self.camadafisica.write(bit)
                     b = self.camadafisica.read()
-                    print("{} = {}".format(b, bit))
+                    print("Lido {} : Esperado {}".format(b, bit))
                     if b != bit:  # se foi lido algo diferente do que foi escrito, então houve colisão
                         print("colisão! emitindo jam")
                         self.camadafisica.write('borda')
@@ -92,17 +94,23 @@ class CamadaEnlace:
             recebido = 0
             quadro = []
             # self.executor = thrd.thread(target=self._writing, args=[data])
+
             while not self.transmiting:
+                self.camadafisica.sincronizacao()
+                self.camadafisica.debug = True
                 recebido = self.camadafisica.read()
+                if self.debug:
+                    print("Recebido {}".format(recebido))
                 if recebido == 'borda':
                     self.receiving = True
                     break
-            if self.transmiting:
                 return None
             while not self.transmiting and self.receiving:
                 recebido = self.camadafisica.read()
+                print("Recebido {}".format(recebido))
                 if recebido != 'borda':
-                    quadro.append(recebido)
+                    quadro.insert(0, recebido)
+            if self.transmiting:
                 else:
                     recebido = self.camadafisica.read()
                     if recebido == 'borda':
@@ -110,7 +118,7 @@ class CamadaEnlace:
                         self.receiving = False
                     else:
                         self.receiving = False
-
+        quadro = quadro[::-1]
         partes = [quadro[x:x + 8] for x in range(0, len(quadro), 8)]
 
         destino = self.listToString(hamm.hammingCodes(partes[0]))
@@ -135,6 +143,7 @@ class CamadaEnlace:
             return bytes
 
     def encodeEndereco(self,ascii):
+        print("Endereço = {}".format(ascii))
         ascii = ascii.split('.')
         return ''.join("{0:04b}".format(int(x),'b') for x in ascii)
 

@@ -12,7 +12,8 @@ class CamadaFisica:
         self.chunkSize = 1024
         self.limite = 450
         self.rateValue = 48000
-        self.intervalo = 0.5 #<<<<<<<<<<<<
+        self.intervalo = 1 #<<<<<<<<<<<<
+        self.debug = False
 
 
     def write(self, data):
@@ -35,9 +36,11 @@ class CamadaFisica:
             sleep(self.intervalo * 0.5)
         elif data == 'borda':
             play_obj = wave_obj.play()
-            # sleep(self.intervalo * 0.4)
-            # play_obj.stop()
-            # 10 01
+            sleep(self.intervalo * 0.5)
+            play_obj.stop()
+            play_obj = wave_obj.play()
+            sleep(self.intervalo * 0.5)
+            play_obj.stop()
 
 
     def read(self):
@@ -46,7 +49,6 @@ class CamadaFisica:
         :param size:
         :return list[size]:
         """
-        valor = 0 #Valor obtido pelas leituras da biblioteca no microfone
         inicio = 0 #Qual bit foi lido
         final = 0
         resultado = 0
@@ -54,25 +56,48 @@ class CamadaFisica:
         audioDrive = pyaudio.PyAudio()
         gravador = audioDrive.open(input=True, channels=1, rate=self.rateValue, format=pyaudio.paInt16, input_device_index=0)
 
+        valor = 0 #Valor obtido pelas leituras da biblioteca no microfone
         for i in range(int(quantLeitura/2)): #controla o tempo de coleta de gravação pra equivaler a duração do invtervalo
             resultado = gravador.read(self.chunkSize)
-            valor += audioop.rms(resultado, 2)
+            aux = audioop.rms(resultado, 2)
+            if self.debug:
+                print(aux)
+            valor += aux
+            #valor += audioop.rms(resultado, 2)
         valor /= int(quantLeitura/2)
-        print(valor)
+        #print("Media: {}".format(valor))
         if valor > self.limite:
             inicio = 1
+        valor = 0
         for i in range(int(quantLeitura/2)): #controla o tempo de coleta de gravação pra equivaler a duração do invtervalo
             resultado = gravador.read(self.chunkSize)
-            valor += audioop.rms(resultado, 2)
+            aux = audioop.rms(resultado, 2)
+            if self.debug:
+                print(aux)
+            valor += aux
+            #valor += audioop.rms(resultado, 2)
         valor /= int(quantLeitura/2)
-        print(valor)
+        #print("Media: {}".format(valor))
         if valor > self.limite:
             final = 1
-
-        if(inicio!=final):
+        if inicio != final:
             return final
         else:
-            if final is 0: # TESTAR SE É ==
+            if final is 0:
                 return None
             else:
                 return 'borda' #2
+
+    def sincronizacao(self):
+        limiteDesbloqueio = 500
+        bonecoChuck = 128
+
+        audioDrive = pyaudio.PyAudio()
+        gravador = audioDrive.open(input=True, channels=1, rate=self.rateValue, format=pyaudio.paInt16, input_device_index=0)
+        while 1:
+            resultado = gravador.read(bonecoChuck)
+            valor = audioop.rms(resultado, 2)
+            if self.debug:
+                print("Valor de bloqueio {}".format(valor))
+            if (valor > limiteDesbloqueio):
+                break
