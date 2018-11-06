@@ -71,6 +71,7 @@ class CamadaEnlace:
                     if lido != bit:  # se foi lido algo diferente do que foi escrito, então houve colisão
                         print("colisão! emitindo jam")
                         self.camadafisica.write(2)
+                        sleep(self.camadafisica.intervalo)
                         self.camadafisica.write(2)
                         self.transmiting = False
                         t = 0
@@ -101,12 +102,10 @@ class CamadaEnlace:
 
             while not self.transmiting:
                 self.camadafisica.sincronizacao()
-                #self.camadafisica.debug = True
                 recebido = self.camadafisica.read()
-                if self.debug:
-                    print("Recebido {}".format(recebido))
-                if recebido == 'borda':
+                if recebido == 2:
                     self.receiving = True
+                    print("Recebido {}".format(recebido))
                     break
             if self.transmiting:
                 return None
@@ -115,21 +114,22 @@ class CamadaEnlace:
                 recebido = self.camadafisica.read()
                 print("Tempo pacote:{} ".format(time() - inicio))
                 print("Recebido {}".format(recebido))
-                if recebido != 'borda':
+                if recebido != 2:
                     quadro.insert(0, recebido)
                 elif recebido == None:
                     return None
                 else:
                     recebido = self.camadafisica.read()
-                    if recebido == 'borda':
+                    if recebido == 2:
                         x = True
                         self.receiving = False
                     else:
                         self.receiving = False
         if len(quadro) >11:
             quadro = quadro[::-1]
-            partes = [quadro[x:x + 8] for x in range(0, len(quadro), 8)]
-
+            partes = [quadro[x:x + 11] for x in range(0, len(quadro), 8)]
+            for p in partes:
+                print(p)
             destino = self.listToString(hamm.hammingCodes(partes[0]))
             origem = self.listToString(hamm.hammingCodes(partes[1]))
 
@@ -142,6 +142,7 @@ class CamadaEnlace:
                 final += self.decodeChar(self.listToString(hamm.hammingCodes(a)))
             pacoteretorno.dados = final
             # processar o quadro para retornar o pacote
+            print("Detino: {}, Origem: {}, Dados: {}".format(pacoteretorno.destino, pacoteretorno.origem, pacoteretorno.dados))
             return pacoteretorno
         else:
             return None

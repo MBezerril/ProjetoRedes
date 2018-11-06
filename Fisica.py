@@ -83,9 +83,9 @@ class CamadaFisica:
         bonecoChuck = 128
 
         audioDrive = pyaudio.PyAudio()
-        gravador = audioDrive.open(input=True, channels=1, rate=self.rateValue, format=pyaudio.paInt16, input_device_index=0)
+
         while 1:
-            resultado = gravador.read(bonecoChuck)
+            resultado = self.gravador.read(bonecoChuck)
             valor = audioop.rms(resultado, 2)
             if self.debug:
                 print("Valor de bloqueio {}".format(valor))
