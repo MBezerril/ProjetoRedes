@@ -1,6 +1,6 @@
 import Fisica as fis
 import threading as thrd
-from time import sleep
+from time import sleep, time
 import Hamming as hamm
 import random
 
@@ -50,24 +50,28 @@ class CamadaEnlace:
         bytes += hamm.hammingCodes(origem)
         bytes += hamm.hammingCodes(tamanhodados)
         bytes += self.hammingDados(dadospacote)
-        bytes.append('borda')
-        bytes.insert(0, 'borda')
+        bytes.append(2)
+        bytes.insert(0, 2)
         print("A ser impresso: {}".format(bytes))
         t = 0
         while t < self.tries: # verifica a disponibilidade da rede uma certa quantidade de vezes antes de expirar
             lido = self.camadafisica.read()
-            print("{} encontrado".format(lido))
+            print("Meio verificado: {}".format(lido))
             if lido is None:
                 self.transmiting = True
-                self.camadafisica.debug = True
+                #self.camadafisica.debug = True
+                inicio = 0
+                sleep(1)
                 for bit in bytes:
+                    inicio = time()
                     self.camadafisica.write(bit)
-                    b = self.camadafisica.read()
-                    print("Lido {} : Esperado {}".format(b, bit))
-                    if b != bit:  # se foi lido algo diferente do que foi escrito, então houve colisão
+                    lido = self.camadafisica.read()
+                    print("Tempo W&R: {} ".format(time() - inicio))
+                    #print("Lido {} : Esperado {}".format(b, bit))
+                    if lido != bit:  # se foi lido algo diferente do que foi escrito, então houve colisão
                         print("colisão! emitindo jam")
-                        self.camadafisica.write('borda')
-                        self.camadafisica.write('borda')
+                        self.camadafisica.write(2)
+                        self.camadafisica.write(2)
                         self.transmiting = False
                         t = 0
                         sleep(random.randint(1, 5))
@@ -97,20 +101,24 @@ class CamadaEnlace:
 
             while not self.transmiting:
                 self.camadafisica.sincronizacao()
-                self.camadafisica.debug = True
+                #self.camadafisica.debug = True
                 recebido = self.camadafisica.read()
                 if self.debug:
                     print("Recebido {}".format(recebido))
                 if recebido == 'borda':
                     self.receiving = True
                     break
+            if self.transmiting:
                 return None
             while not self.transmiting and self.receiving:
+                inicio = time()
                 recebido = self.camadafisica.read()
+                print("Tempo pacote:{} ".format(time() - inicio))
                 print("Recebido {}".format(recebido))
                 if recebido != 'borda':
                     quadro.insert(0, recebido)
-            if self.transmiting:
+                elif recebido == None:
+                    return None
                 else:
                     recebido = self.camadafisica.read()
                     if recebido == 'borda':
@@ -118,22 +126,25 @@ class CamadaEnlace:
                         self.receiving = False
                     else:
                         self.receiving = False
-        quadro = quadro[::-1]
-        partes = [quadro[x:x + 8] for x in range(0, len(quadro), 8)]
+        if len(quadro) >11:
+            quadro = quadro[::-1]
+            partes = [quadro[x:x + 8] for x in range(0, len(quadro), 8)]
 
-        destino = self.listToString(hamm.hammingCodes(partes[0]))
-        origem = self.listToString(hamm.hammingCodes(partes[1]))
+            destino = self.listToString(hamm.hammingCodes(partes[0]))
+            origem = self.listToString(hamm.hammingCodes(partes[1]))
 
-        pacoteretorno = pacote()
-        pacoteretorno.setDestino(self.decodeInt(destino[:3]), self.decodeInt(destino[4:]))
-        pacoteretorno.setOrigem(self.decodeInt(origem[:3]), self.decodeInt(origem[4:]))
-        pacoteretorno.tamanhodados = self.decodeInt(self.listToString(hamm.hammingCodes(partes[2])))
-        final = []
-        for a in partes[3:]:
-            final += self.decodeChar(self.listToString(hamm.hammingCodes(a)))
-        pacoteretorno.dados = final
-        # processar o quadro para retornar o pacote
-        return pacoteretorno
+            pacoteretorno = pacote()
+            pacoteretorno.setDestino(self.decodeInt(destino[:3]), self.decodeInt(destino[4:]))
+            pacoteretorno.setOrigem(self.decodeInt(origem[:3]), self.decodeInt(origem[4:]))
+            pacoteretorno.tamanhodados = self.decodeInt(self.listToString(hamm.hammingCodes(partes[2])))
+            final = []
+            for a in partes[3:]:
+                final += self.decodeChar(self.listToString(hamm.hammingCodes(a)))
+            pacoteretorno.dados = final
+            # processar o quadro para retornar o pacote
+            return pacoteretorno
+        else:
+            return None
 
     def encode(self, ascii):
         if type(ascii) is int:

@@ -37,7 +37,7 @@ class CamadaRede:
             pacote.dados = input("Digite a mensagem: ")
             pacote.tamanhoDados = len(pacote.dados)
             pacote.origem = self.address
-            self.enlace.camadafisica.debug = True
+            #self.enlace.camadafisica.debug = True
             self.enlace.send(pacote)
             if not self.listening:
                 self.startListen()
